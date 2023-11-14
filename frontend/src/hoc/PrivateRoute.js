@@ -1,0 +1,35 @@
+import React from 'react'
+import { useDispatch, useSelector } from 'react-redux' 
+import { Redirect, Route, useLocation } from 'react-router-dom'
+
+export default function PrivateRoute({children}) {
+    const auth = useSelector(state => state.auth)
+    const location = useLocation()
+     const dispatch = useDispatch()
+    if(auth.isAuthenticated){            
+        return (
+            <>
+            {children}
+            </>
+        )
+    } 
+
+    
+    else {
+        return(
+            <>
+                        {
+                    React.Children.map(children, child => (
+                        <div>
+                           <Route exact path={child.props.path}>
+                               <Redirect to={`${location.pathname}?show-account=true`} />
+                           </Route>
+                        </div>
+                     ))
+            }
+            </>
+        )
+    }
+}
+
+
